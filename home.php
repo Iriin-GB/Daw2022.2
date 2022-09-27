@@ -16,7 +16,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if ($conn->connect_error) {
         die("Conexao com o banco de dados falhou!!!");
     }
-
+ 
 
     if (isset($_POST["botaoCriar"])) {
         $nome = $_POST["nome"];
