@@ -48,12 +48,12 @@
             
             let xmlHttp = new XMLHttpRequest();
         
-            xmlHttp.open("GET", "http://git/selecao_CRUD/selecoesIncluir?nomeSelec=" + pSelec + "&nomeTec=" + pTec + "&grupo=" + pGrupo);
+            xmlHttp.open("GET", "http://localhost/selecao_CRUD/selecoesIncluir?nomeSelec=" + pSelec + "&nomeTec=" + pTec + "&grupo=" + pGrupo);
             xmlHttp.send();
             console.log("Requisição Enviada");
             location.reload();
         }
-        
+
     </script>
 
 </head>
@@ -80,8 +80,8 @@
             <label for="cadGrupo">Grupo: </label>
             <input type="text" name="grupo" id="grupo" placeholder="Digite o grupo"><br>
 
-            <input name="botaoCad" type="button" onclick="cadastrarSelec();" value="Cadastrar">
-          
+            <input name="envio" type="button" onclick="cadastrarSelec();" value="Cadastrar">
+           
             
 
         </form>
