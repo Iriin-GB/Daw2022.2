@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>incluir</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script>
+        function enviarForm() { //(pNome, pMat, pEmail, pCpf) {
+                let pMat = document.getElementById("matricula").value;
+                let xmlHttp = new XMLHttpRequest();
+                xmlHttp.onreadystatechange = function() {
+                    console.log("mudou status: " + this.readyState);
+                    if (this.readyState == 4 && this.status == 200) {
+                        console.log("Chegou resposta: " + this.responseText)
+                        document.getElementById("msg").innerHTML = this.responseText;
+                    }
+                }
+                xmlHttp.open("GET", "http://localhost/PHP+JS/CRUD_JAVASCRITP/apagar?matricula=" + pMat);
+                xmlHttp.send();
+                console.log("Enviei requisição");
+            }
+    </script>
+</head>
+<body>
+    <ul>
+        <li><a href="incluir.html">Incluir Aluno</a></li>
+        <li><a href="alterar.html">Alterar Aluno</a></li>
+        <li><a href="apagar.html">Apagar Aluno</a></li>
+        <li><a href="listar.html">Listar Aluno</a></li>
+    </ul>
+
+    <form id="formIncluir">
+      <fieldset>
+        <h2>Apagar por qual matrícula?</h2>
+        <label>Matricula:</label>
+          <input type = "text" name = "matricula" id = "matricula"><br><br>
+          <input type = "button" name = "envio" value="Enviar" 
+            onclick="enviarForm();">
+        </fieldset>
+    </form>
+    <p id="msg">
+    </p>
+</body>
+</html>

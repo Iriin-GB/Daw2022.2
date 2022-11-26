@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Incluir</title>
+    <script src="/back.php"></script>
+    <script>
+
+        function enviarForm(){
+            let pNome = document.getElementById("nome").value;
+            let pMatricula = document.getElementById("matricula").value;
+            let pEmail = document.getElementById("email").value;
+            let pCpf = document.getElementById("cpf").value;
+            
+            let xmlHttp = new XMLHttpRequest();
+            xmlHttp.onreadystatechange = function(){
+                if(this.readyState == 4 && this.status == 200){
+                    console.log("Chegou resposta: " + this.responseText);
+                    document.getElementById("msg").innerHTML = this.responseText;
+                }
+            }
+            xmlHttp.open("GET", "http://localhost/PHP+JS/back.php?nome=" + pNome + "&matricula=" + pMatricula + "&email=" + pEmail + "&cpf=" + pCpf);
+            xmlHttp.send();
+            console.log("Enviei!");
+        } 
+
+    </script>
+</head>
+<body>
+    <form>
+        <fieldset>
+            <label>Nome:    </label>
+            <input type="text" name="nome" id="nome"><br><br>
+            <label>Matrícula:   </label>
+            <input type="text" name="matricula" id="matricula"><br><br>
+            <label>Email:   </label>
+            <input type="text" name="email" id="email"><br><br>
+            <label>CPF: </label>
+            <input type="text" name="cpf" id="cpf"><br><br>
+            <input type="button" name="incluir" value="Criar" onclick="enviarForm()">
+        </fieldset>
+    </form>
+    <p id="msg"></p>
+</body>
+</html>

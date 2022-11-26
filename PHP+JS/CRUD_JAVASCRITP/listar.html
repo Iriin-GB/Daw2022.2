@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>incluir</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script>
+        function enviarForm() { //(pNome, pMat, pEmail, pCpf) {
+                let pNome = document.getElementById("nome").value;
+                let pMat = document.getElementById("matricula").value;
+                let pEmail = document.getElementById("email").value;
+                let pCpf = document.getElementById("cpf").value;
+                let xmlHttp = new XMLHttpRequest();
+                xmlHttp.onreadystatechange = function() {
+                    console.log("mudou status: " + this.readyState);
+                    if (this.readyState == 4 && this.status == 200) {
+                        console.log("Chegou resposta: " + this.responseText)
+                        document.getElementById("msg").innerHTML = this.responseText;
+                    }
+                }
+                xmlHttp.open("GET", "http://localhost/PHP+JS/CRUD_JAVASCRITP/listar?nome=" + pNome +
+                "&email=" + pEmail + "&cpf=" + pCpf + "&matricula=" + pMat);
+                xmlHttp.send();
+                console.log("Enviei requisição");
+            }
+
+        function carregaAlunos() {
+            let xmlHttp = new XMLHttpRequest();
+                xmlHttp.onreadystatechange = function() {
+                    console.log("mudou status: " + this.readyState);
+                    if (this.readyState == 4 && this.status == 200) {
+                    //    console.log("Chegou resposta: " + this.responseText)
+                    //    document.getElementById("msg").innerHTML = this.responseText;
+                        let objAlunos = this.responseText;
+                        let obj = JSON.parse(this.responseText);
+                        let x = 0;
+                        for (x=0;x<obj.length;x++) {
+                            if (obj[x].nome == undefined) {
+                                x++;
+                            }else{
+                                console.log("Posicao do Array " + x + " : " + obj[x].nome);
+                            let linha = obj[x];
+                            criarLinhaTabela(linha);
+                            }
+                            
+                        }
+                        console.log("Posicao do x " + x );
+                    }
+                }
+                xmlHttp.open("GET", "http://localhost/PHP+JS/CRUD_JAVASCRITP/listar.php");
+                xmlHttp.send();
+        }   
+        function criarLinhaTabela(pobjReturnJSON) {
+            let tb = document.getElementById("tab");
+             let tr = document.createElement("tr"); // cria o elemento tr
+            // let td = document.createElement("td"); // cria o element td
+            // let textnode = document.createTextNode(pobjReturnJSON.id);
+            // td.appendChild(textnode); // adiciona o texto na td criada
+            // tr.appendChild(td); // adiciona a td na tr
+
+            let td2 = document.createElement("td"); // cria o element td
+            textnode = document.createTextNode(pobjReturnJSON.nome);
+            td2.appendChild(textnode); // adiciona o texto na td criada
+            tr.appendChild(td2); // adiciona a td na tr
+
+            let td5 = document.createElement("td"); // cria o element td
+            textnode = document.createTextNode(pobjReturnJSON.matricula);
+            td5.appendChild(textnode); // adiciona o texto na td criada
+            tr.appendChild(td5); // adiciona a td na tr
+
+            let td3 = document.createElement("td"); // cria o element td
+            textnode = document.createTextNode(pobjReturnJSON.email);
+            td3.appendChild(textnode); // adiciona o texto na td criada
+            tr.appendChild(td3); // adiciona a td na tr
+
+            let td4 = document.createElement("td"); // cria o element td
+            textnode = document.createTextNode(pobjReturnJSON.cpf);
+            td4.appendChild(textnode); // adiciona o texto na td criada
+            tr.appendChild(td4); // adiciona a td na tr
+
+        
+            let tdBut = document.createElement("td"); // cria o element td
+            let but1 = document.createElement("input", "type"); // cria o element td
+            but1.setAttribute("type", "button");
+            but1.setAttribute("value", "Apagar");
+            tdBut.appendChild(but1);
+            tr.appendChild(tdBut); // adiciona a td na tr
+            let but2 = document.createElement("input", "type"); // cria o element td
+            but2.setAttribute("type", "button");
+            but2.setAttribute("value", "Alterar");
+            tdBut.appendChild(but2);
+            tr.appendChild(tdBut); // adiciona a td na tr
+           
+           
+          but1.onclick = function apagarBtn(params) {
+                  let xmlHttp = new XMLHttpRequest();
+                  xmlHttp.open("GET", "http://localhost/PHP+JS/CRUD_JAVASCRITP/apagar?matricula=" + pobjReturnJSON.matricula);
+                xmlHttp.send();
+                console.log("Enviei requisição");
+                alert("Matrícula Apagada");
+                location.reload();
+            }
+ 
+
+            tb.appendChild(tr);
+            
+
+        }
+        
+    </script>
+</head>
+<body onload="carregaAlunos();">
+    <ul>
+        <li><a href="incluir.html">Incluir Aluno</a></li>
+        <li><a href="alterar.html">Alterar Aluno</a></li>
+        <li><a href="apagar.html">Apagar Aluno</a></li>
+        <li><a href="listar.html">Listar Aluno</a></li>
+    </ul>
+
+    <table id="tab" style="border:1px solid">
+        <tr style="border:1px solid">
+            <th style="border:1px solid; padding-right:30px;">Nome</th>
+            <th style="border:1px solid; padding-right:30px;">Matricula</th>
+            <th style="border:1px solid; padding-right:30px;">Email</th>
+            <th style="border:1px solid; padding-right:30px;">Cpf</th>
+            <th style="border:1px solid; padding-right:30px;">Função</th>
+        </tr>
+    </table>
+    <p id="msg">
+    </p>
+</body>
+</html>
