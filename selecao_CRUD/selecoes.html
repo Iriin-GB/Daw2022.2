@@ -16,7 +16,7 @@
             border-collapse: collapse;
             width: 100%;
             text-align: center;
-            
+
         }
 
         td {
@@ -28,40 +28,61 @@
             border: black 1px solid;
             padding: 2px;
         }
+
         th {
             border: black 1px solid;
             padding: 2px;
         }
-        #divExib{
+
+        #divExib {
             width: 600px;
         }
-
     </style>
+
+    <script>
+
+        function cadastrarSelec(){
+            let pSelec = document.getElementById("nomeSelec").value;
+            let pTec = document.getElementById("nomeTec").value;
+            let pGrupo = document.getElementById("grupo").value;
+            
+            let xmlHttp = new XMLHttpRequest();
+        
+            xmlHttp.open("GET", "http://git/selecao_CRUD/selecoesIncluir?nomeSelec=" + pSelec + "&nomeTec=" + pTec + "&grupo=" + pGrupo);
+            xmlHttp.send();
+            console.log("Requisição Enviada");
+            location.reload();
+        }
+        
+    </script>
+
 </head>
 
 <body>
     <h1>Copa 2022 Qatar</h1>
     <header>
-        <a href="/selecoes.html">Seleções</a>
-        <a href="/jogos.html">Jogos</a>
-        <a href="/historico.html">Histórico</a>
-        <a href="/oitavas.html">Oitavas</a>
+        <a href="/selecao_CRUD/selecoes.html">Seleções</a>
+        <a href="selecao_CRUD/jogos.html">Jogos</a>
+        <a href="selecao_CRUD/historico.html">Histórico</a>
+        <a href="selecao_CRUD/oitavas.html">Oitavas</a>
     </header>
     <div style="border: black 1px solid; width:550px; border-radius:10px; float:right; padding:10px;">
         <h2 style="text-align: center;">Cadastre uma nova seleção</h2>
 
-        <form action="selecoes.html" method="POST">
+        <form id="cadastro">
 
             <label for="cadSelec">Nome da seleção: </label>
-            <input type="text" name="nomeSelec" placeholder="Digite a nome da seleção"><br>
+            <input type="text" name="nomeSelec" id="nomeSelec" placeholder="Digite a nome da seleção"><br>
 
             <label for="cadTec">Nome do técnico: </label>
-            <input type="text" name="nomeTec" placeholder="Digite o nome do Técnico"><br>
+            <input type="text" name="nomeTec" id="nomeTec" placeholder="Digite o nome do Técnico"><br>
 
             <label for="cadGrupo">Grupo: </label>
-            <input type="text" name="grupo" placeholder="Digite o grupo"><br>
+            <input type="text" name="grupo" id="grupo" placeholder="Digite o grupo"><br>
 
-            <input name="botaoCad" type="submit" value="Cadastrar">
+            <input name="botaoCad" type="button" onclick="cadastrarSelec();" value="Cadastrar">
+          
+            
 
         </form>
 
@@ -84,9 +105,12 @@
                 <td><input type="button" value="Alterar"></td>
                 <td><input type="button" value="Jogar"></td>
             </tbody>
-            
+
         </table>
     </div>
+    <footer>
+        <p id="msg"></p>
+    </footer>
 </body>
 
 </html>
