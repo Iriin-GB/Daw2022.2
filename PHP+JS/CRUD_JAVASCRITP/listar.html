@@ -24,8 +24,9 @@
                 xmlHttp.send();
                 console.log("Enviei requisição");
             }
-
+            
         function carregaAlunos() {
+            
             let xmlHttp = new XMLHttpRequest();
                 xmlHttp.onreadystatechange = function() {
                     console.log("mudou status: " + this.readyState);
@@ -43,7 +44,7 @@
                             let linha = obj[x];
                             criarLinhaTabela(linha);
                             }
-                            
+                           
                         }
                         console.log("Posicao do x " + x );
                     }

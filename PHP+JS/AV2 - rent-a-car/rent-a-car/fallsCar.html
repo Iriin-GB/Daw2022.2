@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FallsCar</title>
+    <style>
+        body {
+            font-family: "Lato", sans-serif;
+        }
+
+        .sidenav {
+            height: 100%;
+            width: 0;
+            position: fixed;
+            z-index: 1;
+            top: 0;
+            left: 0;
+            background-color: #111;
+            overflow-x: hidden;
+            transition: 0.5s;
+            padding-top: 60px;
+        }
+
+        .sidenav a {
+            padding: 8px 8px 8px 32px;
+            text-decoration: none;
+            font-size: 25px;
+            color: #818181;
+            display: block;
+            transition: 0.3s;
+        }
+
+        .sidenav a:hover {
+            color: #f1f1f1;
+        }
+
+        .sidenav .closebtn {
+            position: absolute;
+            top: 0;
+            right: 25px;
+            font-size: 36px;
+            margin-left: 50px;
+        }
+
+        @media screen and (max-height: 450px) {
+            .sidenav {
+                padding-top: 15px;
+            }
+
+            .sidenav a {
+                font-size: 18px;
+            }
+
+        }
+        table{
+            margin-top: 20px;
+            border: solid black 1px;
+            border-collapse: collapse;
+            margin-left: auto;
+            margin-right: auto;
+            width: 35%;
+        }
+        td{
+            border: solid black 1px;
+            text-align: center;
+        }
+
+        #tab{
+            display: none;
+        }
+    </style>
+    <script>
+        function openNav() {
+            document.getElementById("mySidenav").style.width = "250px";
+        }
+
+        function closeNav() {
+            document.getElementById("mySidenav").style.width = "0";
+        }
+
+
+        function carregaCarros() {
+            nomeCarro = document.getElementById("buscarCarro").value;
+            nomeCidade = document.getElementById("buscarCidade").value;
+            let tabelinha = document.getElementById("tab");
+
+            console.log("Buscando Carros...");
+
+            tabelinha.style.display = "table";
+
+
+            let xmlHttp = new XMLHttpRequest();
+            xmlHttp.onreadystatechange = function () {
+                console.log("mudou status: " + this.readyState);
+                if (this.readyState == 4 && this.status == 200) {
+                    let objCarro = this.responseText;
+                    let obj = JSON.parse(this.responseText);
+                    let x = 0;
+                    for (x = 0; x < obj.length; x++) {
+
+                        if (obj[x].nomeCarro == undefined) {
+                            //   x++;
+                        } else {
+                            let linha = obj[x];
+                            criarLinhaTabela(linha, obj);
+                        }
+
+                    }
+                    console.log("Total de entradas: " + x);
+                }
+            }
+            xmlHttp.open("GET", "http://localhost/rent-a-car/buscarCarro.php?nomeCarro=" + nomeCarro + "&nomeCidade=" + nomeCidade);
+            xmlHttp.send();
+
+            function criarLinhaTabela(retornoInfos) {
+                let tb = document.getElementById("tab");
+                let tr = document.createElement("tr"); // cria o elemento tr
+                let tempo = document.getElementsByName('tempo');
+                
+                    if(tempo[0].checked){
+                        var tempoCerto = 7;
+                    }else if(tempo[1].checked){
+                        var tempoCerto = 15;
+                    }else if(tempo[2].checked){
+                        var tempoCerto = 30;
+                    }
+                        
+                
+
+
+                let td1 = document.createElement("td"); // cria o element td
+                textnode = document.createTextNode(retornoInfos.nomeCarro);
+                td1.appendChild(textnode); // adiciona o texto na td criada
+                tr.appendChild(td1); // adiciona a td na tr
+
+                let td2 = document.createElement("td"); // cria o element td
+                textnode = document.createTextNode(retornoInfos.categoria);
+                td2.appendChild(textnode); // adiciona o texto na td criada
+                tr.appendChild(td2); // adiciona a td na tr
+
+                let td3 = document.createElement("td"); // cria o element td
+                textnode = document.createTextNode(retornoInfos.cidade);
+                td3.appendChild(textnode); // adiciona o texto na td criada
+                tr.appendChild(td3); // adiciona a td na tr
+
+                let td4 = document.createElement("td"); // cria o element td
+                textnode = document.createTextNode(retornoInfos.preco);
+                td4.appendChild(textnode); // adiciona o texto na td criada
+                tr.appendChild(td4); // adiciona a td na tr
+
+                let td5 = document.createElement("td"); // cria o element td
+                textnode = document.createTextNode(retornoInfos.preco * tempoCerto);
+                td5.appendChild(textnode); // adiciona o texto na td criada
+                tr.appendChild(td5); // adiciona a td na tr
+                
+                tb.appendChild(tr);
+            }
+
+}
+
+
+        
+    </script>
+</head>
+
+<body>
+
+    <div id="mySidenav" class="sidenav">
+        <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+        <a href="#">Inicio</a>
+        <a href="#">Login</a>
+        <a href="#">Registrar</a>
+        <a href="#">Login Gerente</a>
+    </div>
+    <span style="font-size:30px;cursor:pointer" onclick="openNav()">&#9776; Menu</span>
+
+
+
+    <h1 style="text-align: center; font-size: 3em;">FallsCar</h1>
+
+    <img style="display: block; width: 50%; margin-left: auto; margin-right: auto;" src="pngwing.com.png" alt="Carros exemplares">
+
+
+    <form>
+        <input
+            style="display: block; width: 25%; margin-left: auto; margin-right: auto; border-radius: 6px; height: 40px; font-size: large;"
+            type="text" name="buscarCarro" id="buscarCarro" placeholder="Digite o nome do carro desejado">
+        <input
+            style="display: block; width: 25%; margin-left: auto; margin-right: auto; border-radius: 6px; height: 40px; font-size: large; margin-top: 5px;"
+            type="text" name="buscarCidade" id="buscarCidade" placeholder="Digite a cidade">
+
+            <div style="text-align: center; margin-top: 5px;">
+                <input type="radio" name="tempo" id="seteDias">
+                <label for="checkSete">7 Dias</label>
+                
+                <input type="radio" name="tempo" id="quinzeDias">
+                <label for="checkQuinze">15 Dias</label>
+                
+                <input type="radio" name="tempo" id="mesTempo">
+                <label for="checkMes">1 Mês</label>
+                
+            </div>
+            
+
+        <input style="display: block; margin-left: auto; margin-right: auto; margin-top: 5px; border-radius: 3px;"
+            type="button" value="Buscar" name="buscar" onclick="carregaCarros();">
+    </form>
+
+    <table id="tab">
+        <tr>
+            <th>Nome</td>
+            <th>Categoria</td>
+            <th>Cidade</td>
+            <th>Preço p/Dia</td>
+            <th>Preço Calculado</th>
+        </tr>
+    </table>
+
+</body>
+
+</html>

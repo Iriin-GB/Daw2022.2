@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FallsCar</title>
+    <style>
+        body {
+            font-family: "Lato", sans-serif;
+        }
+
+        .sidenav {
+            height: 100%;
+            width: 0;
+            position: fixed;
+            z-index: 1;
+            top: 0;
+            left: 0;
+            background-color: #111;
+            overflow-x: hidden;
+            transition: 0.5s;
+            padding-top: 60px;
+        }
+
+        .sidenav a {
+            padding: 8px 8px 8px 32px;
+            text-decoration: none;
+            font-size: 25px;
+            color: #818181;
+            display: block;
+            transition: 0.3s;
+        }
+
+        .sidenav a:hover {
+            color: #f1f1f1;
+        }
+
+        .sidenav .closebtn {
+            position: absolute;
+            top: 0;
+            right: 25px;
+            font-size: 36px;
+            margin-left: 50px;
+        }
+
+        @media screen and (max-height: 450px) {
+            .sidenav {
+                padding-top: 15px;
+            }
+
+            .sidenav a {
+                font-size: 18px;
+            }
+        }
+
+        h2{
+            text-align: center;
+        }
+        table{
+            border: solid black 1px;
+            border-collapse: collapse;
+            margin-left: auto;
+            margin-right: auto;
+            width: 35%;
+        }
+        td{
+            border: solid black 1px;
+            text-align: center;
+        }
+    </style>
+    <script>
+        function openNav() {
+            document.getElementById("mySidenav").style.width = "250px";
+        }
+
+        function closeNav() {
+            document.getElementById("mySidenav").style.width = "0";
+        }
+
+        function carregaSelecoes() {
+            let xmlHttp = new XMLHttpRequest();
+            xmlHttp.onreadystatechange = function () {
+                console.log("mudou status: " + this.readyState);
+                if (this.readyState == 4 && this.status == 200) {
+                    let objSelecao = this.responseText;
+                    let obj = JSON.parse(this.responseText);
+                    let x = 0;
+                    for (x = 0; x < obj.length; x++) {
+
+                        if (obj[x].nomeSelecao == undefined) {
+                            //   x++;
+                        } else {
+                            let linha = obj[x];
+                            criarLinhaTabela(linha, obj);
+                        }
+
+                    }
+                    console.log("Total de entradas: " + x);
+                }
+            }
+            xmlHttp.open("GET", "http://localhost/selecao_CRUD/selecoesListar.php");
+            xmlHttp.send();
+
+            function criarLinhaTabela(pobjReturnJSON) {
+                let tb = document.getElementById("tab");
+                let tr = document.createElement("tr"); // cria o elemento tr
+
+
+                let td2 = document.createElement("td"); // cria o element td
+                textnode = document.createTextNode(pobjReturnJSON.nomeSelecao);
+                td2.appendChild(textnode); // adiciona o texto na td criada
+                tr.appendChild(td2); // adiciona a td na tr
+
+                let td5 = document.createElement("td"); // cria o element td
+                textnode = document.createTextNode(pobjReturnJSON.nomeTecnico);
+                td5.appendChild(textnode); // adiciona o texto na td criada
+                tr.appendChild(td5); // adiciona a td na tr
+
+                let td3 = document.createElement("td"); // cria o element td
+                textnode = document.createTextNode(pobjReturnJSON.grupo);
+                td3.appendChild(textnode); // adiciona o texto na td criada
+                tr.appendChild(td3); // adiciona a td na tr
+                
+                tb.appendChild(tr);
+            }
+
+}
+        
+    </script>
+</head>
+
+<body>
+
+    <div id="mySidenav" class="sidenav">
+        <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+        <a href="#">Login</a>
+        <a href="#">Registrar</a>
+        <a href="#">Login Gerente</a>
+    </div>
+    <span style="font-size:30px;cursor:pointer" onclick="openNav()">&#9776; Menu</span>
+
+
+
+    <h1 style="text-align: center; font-size: 3em;">FallsCar</h1>
+
+
+    <h2>Lista de Carros</h2>
+    <table id="tab">
+        <tr>
+            <td>Nome</td>
+            <td>Categoria</td>
+            <td>Cidade</td>
+            <td>Preço</td>
+        </tr>
+    </table>
+
+
+
+</body>
+
+</html>
