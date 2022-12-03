@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastrar Veículo</title>
+    <style>
+        input{
+            margin-top: 5px;
+            border-radius: 10px;
+            border: solid gray 1px;
+            padding: 5px;
+        }
+        #circulo{
+            margin-left: auto;
+            margin-right: auto;
+            display: block;
+            width: 500px;
+            height: 500px;
+            border-radius: 50%;
+
+        }
+    </style>
+    <script>
+        function butCadCar(){
+            let nome = document.getElementById("nome").value;
+            let cat = document.getElementById("cat").value;
+            let cid = document.getElementById("cid").value;
+            let  preco = document.getElementById("preco").value;
+
+            let xmlHttp = new XMLHttpRequest();
+
+                xmlHttp.onreadystatechange = function () {
+                    if (this.readyState == 4 && this.status == 200) {
+                        let resp = xmlHttp.responseText;
+                        alert(resp);
+                        document.location.reload();
+                    }
+
+                
+            }
+                xmlHttp.open("GET", "http://localhost/rent-a-car/cadVeiculo.php?nome=" + nome + "&cat=" + cat + "&cid=" + cid+ "&preco=" + preco);
+                xmlHttp.send();
+        }
+    </script>
+</head>
+<body>
+    <div id="circulo" style="text-align: center; border: solid black 1px;">
+        <h1 style="padding-top:100px;"> Cadastro de Carros</h1>
+        <form">
+            <label for="Nome do Veículo"></label>
+            <input type="text" id="nome" placeholder="Nome do Veículo"><br>
+
+            <label for="Categoria"></label>
+            <input type="text" id="cat" placeholder="Categoria"><br>
+
+            <label for="Cidade"></label>
+            <input type="text" id="cid" placeholder="Cidade"><br>
+
+            <label for="Preço diária"></label>
+            <input type="text" id="preco" placeholder="Preço diária"><br>
+            <input type="button" id="butReg" onclick="butCadCar()" value="Cadastrar">
+            
+        </form>
+    </div>
+</body>
+</html>

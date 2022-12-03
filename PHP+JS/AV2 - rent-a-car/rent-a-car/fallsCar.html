@@ -97,7 +97,7 @@
                 console.log("mudou status: " + this.readyState);
                 if (this.readyState == 4 && this.status == 200) {
                     let objCarro = this.responseText;
-                    let obj = JSON.parse(this.responseText);
+                    var obj = JSON.parse(this.responseText);
                     let x = 0;
                     for (x = 0; x < obj.length; x++) {
 
@@ -112,6 +112,7 @@
                     console.log("Total de entradas: " + x);
                 }
             }
+            
             xmlHttp.open("GET", "http://localhost/rent-a-car/buscarCarro.php?nomeCarro=" + nomeCarro + "&nomeCidade=" + nomeCidade);
             xmlHttp.send();
 
@@ -163,8 +164,15 @@
                 but1.setAttribute("value", "Comprar");
 
                 but1.onclick = function alugarCarro(params){
-                    window.location.replace("http://localhost/rent-a-car/buscarCarro.php?nomeCarro=" + nomeCarro + "&nomeCidade=" + nomeCidade);
-                    window.location.replace("http://localhost/rent-a-car/fallsCar.html?id=" + resp.id);
+                    let pesquisaID = new URLSearchParams(location.search);
+                    idClient = pesquisaID.get('id');
+                    if(idClient == undefined || idClient == null){
+                        alert("Você precisa estar logado para alugar");
+                    }else{
+                        let radioMark = document.querySelector('input[name="tempo"]:checked').value;
+                        window.location.replace("http://localhost/rent-a-car/carro.html?idCarro=" + retornoInfos.id + "&idClient=" + idClient + "&dias=" + radioMark );
+                    }
+                    
                     console.log(retornoInfos);
                 }
                 td6.appendChild(but1); // adiciona o texto na td criada
@@ -186,10 +194,9 @@
 
     <div id="mySidenav" class="sidenav">
         <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
-        <a href="#">Inicio</a>
-        <a href="/login.html">Login</a>
-        <a href="#">Registrar</a>
-        <a href="#">Login Gerente</a>
+        <a href="./fallsCar.html">Inicio</a>
+        <a href="./login.html">Login</a>
+        <a href="./cadVeiculo.html">Cad. Veículo [Restrito]</a>
     </div>
     <span style="font-size:30px;cursor:pointer" onclick="openNav()">&#9776; Menu</span>
 
@@ -209,13 +216,13 @@
             type="text" name="buscarCidade" id="buscarCidade" placeholder="Digite a cidade">
 
             <div style="text-align: center; margin-top: 5px;">
-                <input type="radio" name="tempo" id="seteDias" checked>
+                <input type="radio" name="tempo" id="seteDias" value="7" checked>
                 <label for="checkSete">7 Dias</label>
                 
-                <input type="radio" name="tempo" id="quinzeDias">
+                <input type="radio" name="tempo" id="quinzeDias" value="15">
                 <label for="checkQuinze">15 Dias</label>
                 
-                <input type="radio" name="tempo" id="mesTempo">
+                <input type="radio" name="tempo" id="mesTempo" value="30">
                 <label for="checkMes">1 Mês</label>
                 
             </div>

@@ -41,7 +41,7 @@
     .circuloPequeno{
         height: 100px;
         width: 100px;
-        background:url("/astecar-amar\ 1.png");
+        background:url("astecar-amar\ 1.png");
         background-size: 110%;
         background-position: -4px;
         border-radius: 50%;
@@ -68,6 +68,11 @@
                 }while (regSenhaConf != regSenha);
                 let regNome = prompt("Como gostaria de ser chamado?");
                 
+                // do{
+                //     var redAdm = 1;
+                //     redAdm = prompt("É um administrador? [0]- SIM ou [1] - NÃO");
+                // }while(redAdm != 0 || redAdm != 1); -------- PROBLEMA
+                
                 let xmlHttp = new XMLHttpRequest();
 
                 
@@ -79,7 +84,7 @@
 
                 
             }
-                xmlHttp.open("GET", "http://localhost/rent-a-car/registerClient.php?regEmail=" + regEmail + "&regSenha=" + regSenha + "&regNome=" + regNome);
+                xmlHttp.open("GET", "http://localhost/rent-a-car/registerClient.php?regEmail=" + regEmail + "&regSenha=" + regSenha + "&regNome=" + regNome+ "&redAdm=" + redAdm);
                 xmlHttp.send();
                 
         }
@@ -95,11 +100,15 @@
                 xmlHttp.onreadystatechange = function () {
                     if (this.readyState == 4 && this.status == 200) {
                         let resp = JSON.parse(xmlHttp.responseText);
+                        let id = resp[3];
+                        let adm = resp[4];
                         if(resp=="Falha no login"){
                             alert(resp);
+                        }else if(adm == 1){
+                            alert("Bem Vindo");
+                            window.location.replace("http://localhost/rent-a-car/fallsCar.html?id=" + id);
                         }else{
-                            alert("Bem Vindo ")
-                            window.location.replace("http://localhost/rent-a-car/fallsCar.html?id=" + resp.id);
+                            window.location.replace("http://localhost/rent-a-car/cadVeiculo.html?adm=" + adm);
                         }
                         
                     }
