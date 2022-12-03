@@ -61,7 +61,7 @@
             border-collapse: collapse;
             margin-left: auto;
             margin-right: auto;
-            width: 35%;
+            width: 45%;
         }
         td{
             border: solid black 1px;
@@ -155,8 +155,24 @@
                 textnode = document.createTextNode(retornoInfos.preco * tempoCerto);
                 td5.appendChild(textnode); // adiciona o texto na td criada
                 tr.appendChild(td5); // adiciona a td na tr
+
+                let td6 = document.createElement("td"); // cria o element td
+                but1 = document.createElement("input");
+                but1.setAttribute("id", "butComprar");
+                but1.setAttribute("type", "button");
+                but1.setAttribute("value", "Comprar");
+
+                but1.onclick = function alugarCarro(params){
+                    window.location.replace("http://localhost/rent-a-car/buscarCarro.php?nomeCarro=" + nomeCarro + "&nomeCidade=" + nomeCidade);
+                    window.location.replace("http://localhost/rent-a-car/fallsCar.html?id=" + resp.id);
+                    console.log(retornoInfos);
+                }
+                td6.appendChild(but1); // adiciona o texto na td criada
+                tr.appendChild(td6); // adiciona a td na tr
                 
                 tb.appendChild(tr);
+
+
             }
 
 }
@@ -171,7 +187,7 @@
     <div id="mySidenav" class="sidenav">
         <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
         <a href="#">Inicio</a>
-        <a href="#">Login</a>
+        <a href="/login.html">Login</a>
         <a href="#">Registrar</a>
         <a href="#">Login Gerente</a>
     </div>
@@ -193,7 +209,7 @@
             type="text" name="buscarCidade" id="buscarCidade" placeholder="Digite a cidade">
 
             <div style="text-align: center; margin-top: 5px;">
-                <input type="radio" name="tempo" id="seteDias">
+                <input type="radio" name="tempo" id="seteDias" checked>
                 <label for="checkSete">7 Dias</label>
                 
                 <input type="radio" name="tempo" id="quinzeDias">
@@ -216,6 +232,7 @@
             <th>Cidade</td>
             <th>Preço p/Dia</td>
             <th>Preço Calculado</th>
+            <th>Comprar</th>
         </tr>
     </table>
 

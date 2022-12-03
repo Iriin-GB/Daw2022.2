@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login</title>
+    <style>
+    .circuloLogin {
+        height: 500px;
+        width: 500px;
+        background-color: #bbb ;
+        opacity: 100%;
+        border-radius: 50%;
+        border: solid 5px;
+        margin-left: auto;
+        margin-right: auto;
+        display: block;
+    }
+    .div{
+        object-position: center;
+    }
+    .form_circular{
+        margin-top: 120px;
+        text-align: center;
+        padding: 0;
+    }
+    input{
+        border-radius: 10px;
+        width: 55%;
+        border: none;
+        margin-top: 7px ;
+        padding-left:10px ;
+    }
+    input[type=button]:hover{
+        background-color: rgb(253, 249, 213);
+    }
+    input[type=text]:focus{
+        outline: none;
+    }
+    .circuloPequeno{
+        height: 100px;
+        width: 100px;
+        background:url("/astecar-amar\ 1.png");
+        background-size: 110%;
+        background-position: -4px;
+        border-radius: 50%;
+        border: solid 5px black;
+        margin-left: auto;
+        margin-right: auto;
+        display: block;
+        margin-bottom: 50px;
+        margin-top: 0;
+    }
+
+    </style>
+    <script>
+        function criarConta(){
+            let regEmail = document.getElementById("email").value;
+            let regSenha = document.getElementById("senha").value;
+            let regSenhaConf;
+            
+            if(regEmail == null || regEmail == ""  || regSenha == null || regSenha == ""){
+                alert("Digite seus dados!");
+            }else{
+                do{
+                    regSenhaConf = prompt("Confirme sua senha");
+                }while (regSenhaConf != regSenha);
+                let regNome = prompt("Como gostaria de ser chamado?");
+                
+                let xmlHttp = new XMLHttpRequest();
+
+                
+                xmlHttp.onreadystatechange = function () {
+                    if (this.readyState == 4 && this.status == 200) {
+                        let resp = xmlHttp.responseText;
+                        console.log(resp);
+                    }
+
+                
+            }
+                xmlHttp.open("GET", "http://localhost/rent-a-car/registerClient.php?regEmail=" + regEmail + "&regSenha=" + regSenha + "&regNome=" + regNome);
+                xmlHttp.send();
+                
+        }
+    }
+
+        function login(){
+           let testEmail = document.getElementById("email").value;
+           let testSenha = document.getElementById("senha").value;
+            if(testEmail == null || testEmail == ""  || testEmail == null || testEmail == ""){
+                alert("Digite seus dados!");
+            }else{
+                let xmlHttp = new XMLHttpRequest();
+                xmlHttp.onreadystatechange = function () {
+                    if (this.readyState == 4 && this.status == 200) {
+                        let resp = JSON.parse(xmlHttp.responseText);
+                        if(resp=="Falha no login"){
+                            alert(resp);
+                        }else{
+                            alert("Bem Vindo ")
+                            window.location.replace("http://localhost/rent-a-car/fallsCar.html?id=" + resp.id);
+                        }
+                        
+                    }
+
+                
+            }
+                xmlHttp.open("GET", "http://localhost/rent-a-car/buscarClient.php?testEmail=" + testEmail + "&testSenha=" + testSenha);
+                xmlHttp.send();
+            }
+
+        }
+    </script>
+
+</head>
+<body>
+    <div>
+        <span class="circuloLogin">
+            <form class="form_circular">
+                <span class="circuloPequeno">
+
+                </span>
+                <label for="Email"></label>
+                <input type="text" id="email" placeholder="Digite seu email"><br>
+                <label for="Senha"></label>
+                <input type="password" id="senha"  placeholder="Digite sua senha"><br>
+                <input type="button" id="butLogin" onclick="login()" style="width: 20%;" value="Login">
+                <input type="button" id="butReg" onclick="criarConta()" style="width: 20%;" value="Registrar">
+            </form>
+            
+        </span>
+    </div>
+</body>
+</html>
