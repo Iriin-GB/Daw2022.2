@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script>
+        function carregarInfos() {
+
+            let pesquisaID = new URLSearchParams(location.search);
+            let id = pesquisaID.get('idCarro');
+
+            let xmlHttp = new XMLHttpRequest();
+            xmlHttp.onreadystatechange = function () {
+                if (this.readyState == 4 && this.status == 200) {
+                    let objCarro = this.responseText;
+                    var obj = JSON.parse(this.responseText);
+                    var nomeCarro = obj.nomeCarro;
+                    var localCarro = obj.cidade;
+                    var precoCarro = obj.preco;
+                    var catCarro = obj.categoria;
+                    var idCarro = obj.id;
+
+                    document.title = nomeCarro;
+                    selecRadio(precoCarro);
+
+                    document.getElementById("titCarro").innerHTML = nomeCarro;
+                    document.getElementById("titCidade").innerHTML = localCarro;
+                    document.getElementById("idExib").innerHTML = idCarro;
+                    document.getElementById("cat").innerHTML = catCarro;
+                }
+
+
+            }
+
+            xmlHttp.open("GET", "http://localhost/rent-a-car/carro.php?id=" + id);
+            xmlHttp.send();
+
+
+        }
+        function openNav() {
+            document.getElementById("mySidenav").style.width = "250px";
+        }
+
+        function closeNav() {
+            document.getElementById("mySidenav").style.width = "0";
+        }
+
+        function selecRadio(precoCarro) {
+            let pesquisaRadio = new URLSearchParams(location.search);
+            let radio = pesquisaRadio.get('dias');
+
+            if (radio == document.getElementById("sete").value) {
+                document.getElementById("sete").setAttribute("checked", "checked");
+                convertValores(precoCarro, radio)
+            } else if (radio == document.getElementById("quinze").value) {
+                document.getElementById("quinze").setAttribute("checked", "checked");
+                convertValores(precoCarro, radio)
+            } else if (radio == document.getElementById("trinta").value) {
+                document.getElementById("trinta").setAttribute("checked", "checked");
+                convertValores(precoCarro, radio)
+            }
+        }
+        function convertValores(precoCarro, radio) {
+            let precoExib = document.getElementById("preco");
+            precoExib.innerHTML = precoCarro;
+
+            let diasExib = document.getElementById("dias");
+            diasExib.innerHTML = radio;
+
+            let precoTotal = precoCarro * radio;
+            let precoTotalTexto = document.getElementById("precoTotal");
+            precoTotalTexto.innerHTML = precoTotal;
+        }
+    </script>
+    <title>Carro Exibição</title>
+    <style>
+        body {
+            font-family: "Lato", sans-serif;
+        }
+
+        .sidenav {
+            height: 100%;
+            width: 0;
+            position: fixed;
+            z-index: 1;
+            top: 0;
+            left: 0;
+            background-color: #111;
+            overflow-x: hidden;
+            transition: 0.5s;
+            padding-top: 60px;
+        }
+
+        .sidenav a {
+            padding: 8px 8px 8px 32px;
+            text-decoration: none;
+            font-size: 25px;
+            color: #818181;
+            display: block;
+            transition: 0.3s;
+        }
+
+        .sidenav a:hover {
+            color: #f1f1f1;
+        }
+
+        .sidenav .closebtn {
+            position: absolute;
+            top: 0;
+            right: 25px;
+            font-size: 36px;
+            margin-left: 50px;
+        }
+
+        @media screen and (max-height: 450px) {
+            .sidenav {
+                padding-top: 15px;
+            }
+
+            .sidenav a {
+                font-size: 18px;
+            }
+
+        }
+
+        table {
+            margin-top: 20px;
+            border: solid black 1px;
+            border-collapse: collapse;
+            margin-left: auto;
+            margin-right: auto;
+            width: 45%;
+        }
+
+        td {
+            border: solid black 1px;
+            text-align: center;
+        }
+
+        #tab {
+            display: none;
+        }
+
+        div {
+            position: relative;
+            border-radius: 20px;
+        }
+
+        .container {
+            display: flex;
+        }
+
+        .produto {
+            width: 700px;
+            height: 500px;
+        }
+
+        .valores {
+            width: -100px;
+
+        }
+
+        input[type=radio] {
+            margin-top: 25px;
+        }
+
+        label {
+            font-size: 25px;
+        }
+    </style>
+</head>
+
+<body onLoad="carregarInfos()">
+    <div id="mySidenav" class="sidenav">
+        <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+        <a href="#">Inicio</a>
+        <a href="./login.html">Login</a>
+        <a href="#">Registrar</a>
+        <a href="#">Login Gerente</a>
+    </div>
+    <span style="font-size:30px;cursor:pointer" onclick="openNav()">&#9776; Menu</span>
+
+
+    <div class="container">
+
+
+
+        <div class="produto" style="border: solid black 1px; padding: 5px; ">
+            <h3 style="text-align: left;">Cód. Veículo: #<span id="idExib">x</span></h3>
+            <figure style="border: solid black 1px; width: 300px; height: 150px; margin-left: auto; margin-right: auto; margin-top: 0px;"></figure>
+            <img style="background-color: #ddd; " src="" alt="imagem carro">
+            </figure>
+            <h1 id="titCarro" style="text-decoration: underline; color:rgb(46, 45, 45);">Nome Carro</h1>
+            <h2 id="titCidade" style="text-decoration: underline; color:rgb(46, 45, 45);"></h2>
+            <p style="text-align:justify; font-size: 14px; line-height: 16px; margin-right: 100px;">
+                O <span id="titCarro">x</span> é um dos melhores veículos <span id="cat">x</span> que possuímos aos seus serviços, sempre
+                completos.
+                <br>Possuem ótimo de rendimento em gasolina, rodando até [valor1] p/litro.
+                Vem com: [funcaoAutomotiva1], [funcaoAutomotiva2], [funcaoAutomotiva3]... <br>
+
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis ultricies neque malesuada augue dictum,
+                luctus aliquam erat iaculis. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per
+                inceptos himenaeos. Integer eleifend, velit in faucibus rutrum. Aliquam quis arcu sed quam
+                mattis dictum. Fusce rhoncus est at tortor eleifend sollicitudin.
+            </p>
+        </div>
+
+
+
+
+        <div class="valores" style="flex-grow: 0.5; border: solid red 1px; margin-left: 5%; text-align: center;">
+            <input type="radio" name="dias" value="7" id="sete">
+            <label for="checkSete">7 Dias</label>
+            <input type="radio" name="dias" value="15" id="quinze">
+            <label for="checkSete">15 Dias</label>
+            <input type="radio" name="dias" value="30" id="trinta">
+            <label for="checkSete">1 Mês</label>
+
+            <h4><span id="preco">PREÇO</span>x<span style="font-style: italic; font-size: 12px;"
+                    id="dias">VALOR</span><span style="font-style: italic; font-size: 12px;">dias</span> </h4>
+            <h3><span style="color: red;" id="precoTotal">PREÇOTOTAL</span></h3>
+            <input type="submit" value="Comprar">
+        </div>
+    </div>
+
+</body>
+
+</html>

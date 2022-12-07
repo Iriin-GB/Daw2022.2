@@ -10,19 +10,19 @@ header('Access-Control-Allow-Origin: *'); //falha de segurança
     if($_SERVER["REQUEST_METHOD"]=="GET")
     {    
         
-        $nome = $_GET["regNome"];
-        $email = $_GET["regEmail"];
-        $senha = $_GET["regSenha"];
-        $adm = $_GET["adm"];
+        $nomeCarro = $_GET["nome"];
+        $categoria = $_GET["cat"];
+        $cidade = $_GET["cid"];
+        $preco = $_GET["preco"];
 
         $conn = new mysqli ($servidor, $user, $pass, $banco);
         
-            $sql = "INSERT INTO `listausuarios`(`nome`, `email`, `senha`, `adm` ) VALUES ('$nome','$email','$senha','$adm') ";
+            $sql = "INSERT INTO `listacarros`(`nomeCarro`, `categoria`, `cidade`, `preco` ) VALUES ('$nomeCarro','$categoria','$cidade','$preco') ";
 
         $result=$conn->query($sql);
        
         if($result == true){
-            $retorno = "Cliente criado, faça login agora";
+            $retorno = "Veículo criado com sucesso!";
         }
         else{
             $retorno = "Erro no registro, tente novamente";
