@@ -54,17 +54,93 @@
             location.reload();
         }
 
+        function carregaSelecoes() {
+            
+            let xmlHttp = new XMLHttpRequest();
+                xmlHttp.onreadystatechange = function() {
+                    console.log("mudou status: " + this.readyState);
+                    if (this.readyState == 4 && this.status == 200) {
+                        let selecFull = this.responseText;
+                        let selecParse = JSON.parse(this.responseText);
+                        let x = 0;
+                        for (x=0;x<selecFull.length;x++) {
+                            if (selecFull[x].nome == undefined) {
+                                x++;
+                            }else{
+                                console.log("Posicao do Array " + x + " : " + selecFull[x].nomeSelecao);
+                            let linha = selecFull[x];
+                            criarLinhaTabela(linha);
+                            }
+                           
+                        }
+                    }
+                }
+                xmlHttp.open("GET", "http://localhost/Daw2022.2/selecao_CRUD/selecoesListar.php");
+                xmlHttp.send();
+        }   
+        function criarLinhaTabela(pobjReturnJSON) {
+            let tb = document.getElementById("tab");
+             let tr = document.createElement("tr");
+
+            let tdSelec = document.createElement("td");
+            textnode = document.createTextNode(pobjReturnJSON.nome);
+            tdSelec.appendChild(textnode);
+            tr.appendChild(tdSelec); 
+
+            let tdTec = document.createElement("td");
+            textnode = document.createTextNode(pobjReturnJSON.matricula);
+            tdTec.appendChild(textnode);
+            tr.appendChild(tdTec); 
+
+            let tdGrupo = document.createElement("td");
+            textnode = document.createTextNode(pobjReturnJSON.email);
+            tdGrupo.appendChild(textnode);
+            tr.appendChild(tdGrupo); 
+
+            let tdAlt = document.createElement("td");
+            textnode = document.createTextNode(pobjReturnJSON.cpf);
+            tdAlt.appendChild(textnode);
+            tr.appendChild(tdAlt); 
+
+        
+            let tdJogar = document.createElement("td");
+            let but1 = document.createElement("input", "type");
+            but1.setAttribute("type", "button");
+            but1.setAttribute("value", "Apagar");
+            tdJogar.appendChild(but1);
+            tr.appendChild(tdJogar); 
+            let but2 = document.createElement("input", "type");
+            but2.setAttribute("type", "button");
+            but2.setAttribute("value", "Alterar");
+            tdJogar.appendChild(but2);
+            tr.appendChild(tdJogar); 
+           
+           
+          but1.onclick = function apagarBtn(params) {
+                  let xmlHttp = new XMLHttpRequest();
+                //   xmlHttp.open("GET", "http://localhost/PHP+JS/CRUD_JAVASCRITP/apagar?matricula=" + pobjReturnJSON.matricula);
+                // xmlHttp.send();
+                console.log("Enviei requisição");
+                alert("Matrícula Apagada");
+                // location.reload();
+            }
+ 
+
+            tb.appendChild(tr);
+            
+
+        }
     </script>
 
 </head>
 
-<body>
+<body onload="carregaSelecoes()">
     <h1>Copa 2022 Qatar</h1>
     <header>
-        <a href="/selecao_CRUD/selecoes.html">Seleções</a>
-        <a href="selecao_CRUD/jogos.html">Jogos</a>
-        <a href="selecao_CRUD/historico.html">Histórico</a>
-        <a href="selecao_CRUD/oitavas.html">Oitavas</a>
+        <a href="selecoes.html">Seleções</a>
+        <a href="jogos.html">Jogos</a>
+        <a href="historico.html">Histórico</a>
+        <a href="oitavas.html">Oitavas</a>
     </header>
     <div style="border: black 1px solid; width:550px; border-radius:10px; float:right; padding:10px;">
         <h2 style="text-align: center;">Cadastre uma nova seleção</h2>
@@ -88,7 +164,7 @@
 
     <div id="divExib">
         <h2>Seleções cadastradas</h2>
-        <table>
+        <table id="tab">
             <thead>
                 <th>Seleção</th>
                 <th>Técnico</th>
