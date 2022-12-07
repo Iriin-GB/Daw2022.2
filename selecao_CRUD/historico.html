@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Selec</title>
+    <style>
+        div{
+            border: solid black 1px;
+            display: block;
+            margin-left: auto;
+            margin-right:auto ;
+            text-align: center;
+            padding: 5px;
+            border-radius: 10px;
+            margin-top: 25px;
+            margin-bottom:25px ;
+        }
+        .lista{
+            width: 50%;
+            height: 500px;
+        }
+        .selec{
+            width: 200px;
+            height: 100px;
+        }
+        table{
+            border-collapse: collapse;
+            border: solid black 1px;
+            width: 90%;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        th{
+            border: solid black 1px;
+            border-collapse: collapse;
+        }
+        td{
+            border: solid black 1px;
+            border-collapse: collapse;
+        }
+    </style>
+
+    <script>
+function carregarJogos() {
+
+            let selecaoEscolhida = document.getElementById('but1').value;
+
+            let xmlHttp = new XMLHttpRequest();
+            xmlHttp.onreadystatechange = function () {
+                console.log("mudou status: " + this.readyState);
+                if (this.readyState == 4 && this.status == 200) {
+                    let objSelecao = this.responseText;
+                    let obj = JSON.parse(this.responseText);
+                    let x = 0;
+                    for (x = 0; x < obj.length; x++) {
+
+                        if (obj[x].selecaoA == undefined || obj[x].selecaoB == undefined) {
+                            //   x++;
+                        } else {
+                            let linha = obj[x];
+                            criarLinhaTabela(linha, obj);
+                        }
+
+                    }
+                    console.log("Total de entradas: " + x);
+                }
+            }
+            
+            xmlHttp.open("GET", "http://localhost/selecao_CRUD/jogosListar.php?selecaoEscolhida=" + selecaoEscolhida)
+            xmlHttp.send();
+
+            function criarLinhaTabela(pobjReturnJSON, listaFull) {
+
+                
+
+
+                let tb = document.getElementById("tab");
+                let tr = document.createElement("tr"); // cria o elemento tr
+
+
+                let tdData = document.createElement("td"); // cria o element td
+                textnode = document.createTextNode(pobjReturnJSON.data);
+                tdData.appendChild(textnode); // adiciona o texto na td criada
+                tr.appendChild(tdData); // adiciona a td na tr
+
+                let tdHora = document.createElement("td"); // cria o element td
+                textnode = document.createTextNode(pobjReturnJSON.hora);
+                tdHora.appendChild(textnode); // adiciona o texto na td criada
+                tr.appendChild(tdHora); // adiciona a td na tr
+
+                let dtLocal = document.createElement("td"); // cria o element td
+                textnode = document.createTextNode(pobjReturnJSON.local);
+                dtLocal.appendChild(textnode); // adiciona o texto na td criada
+                tr.appendChild(dtLocal); // adiciona a td na tr
+
+
+                let tdSelecA = document.createElement("td"); // cria o element td
+                textnode = document.createTextNode(pobjReturnJSON.selecaoA);
+                tdSelecA.appendChild(textnode); // adiciona o texto na td criada
+                tr.appendChild(tdSelecA); // adiciona a td na tr
+
+                let tdSelecB = document.createElement("td"); // cria o element td
+                textnode = document.createTextNode(pobjReturnJSON.selecaoB);
+                tdSelecB.appendChild(textnode); // adiciona o texto na td criada
+                tr.appendChild(tdSelecB); // adiciona a td na tr
+
+                let tdGolsA = document.createElement("td"); // cria o element td
+                textnode = document.createTextNode(pobjReturnJSON.golsA);
+                tdGolsA.appendChild(textnode); // adiciona o texto na td criada
+                tr.appendChild(tdGolsA); // adiciona a td na tr
+
+                let tdGolsB = document.createElement("td"); // cria o element td
+                textnode = document.createTextNode(pobjReturnJSON.golsB);
+                tdGolsB.appendChild(textnode); // adiciona o texto na td criada
+                tr.appendChild(tdGolsB); // adiciona a td na tr
+
+                tb.appendChild(tr);
+            }
+        }
+    </script>
+</head>
+<body>
+    
+    <h1>Qual seleção gostaria de analisar?</h1>
+    <header>
+        <a href="selecoes.html">Seleções</a>
+        <a href="jogos.html">Jogos</a>
+        <a href="historico.html">Histórico</a>
+        <a href="oitavas.html">Oitavas</a>
+    </header>
+    <div class="selec">
+        <input style="margin-top: 20px;" type="text" id="but1" placeholder="Digite o nome da seleção">
+        <input style="margin-top: 20px;" type="button"  value="Buscar" onclick="carregarJogos()">
+    </div>
+    <div class="lista">
+        <table id="tab">
+            <thead>
+                <th>Data</th>
+                <th>Hora</th>
+                <th>Local</th>
+                <th>Seleção A</th>
+                <th>Seleção B</th>
+                <th>Gols A</th>
+                <th>Gols B</th>
+            </thead>
+        </table>
+        
+    </div>
+    
+</body>
+</html>

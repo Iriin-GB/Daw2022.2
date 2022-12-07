@@ -41,100 +41,181 @@
 
     <script>
 
-        function cadastrarSelec(){
+        function cadastrarSelec() {
             let pSelec = document.getElementById("nomeSelec").value;
             let pTec = document.getElementById("nomeTec").value;
             let pGrupo = document.getElementById("grupo").value;
-            
+
             let xmlHttp = new XMLHttpRequest();
-        
-            xmlHttp.open("GET", "http://localhost/selecao_CRUD/selecoesIncluir?nomeSelec=" + pSelec + "&nomeTec=" + pTec + "&grupo=" + pGrupo);
+
+            xmlHttp.open("GET", "http://localhost/selecao_CRUD/selecoesIncluir.php?nomeSelec=" + pSelec + "&nomeTec=" + pTec + "&grupo=" + pGrupo);
             xmlHttp.send();
-            console.log("Requisição Enviada");
+            console.log("Requisição Enviada - Criar");
             location.reload();
         }
 
         function carregaSelecoes() {
-            
             let xmlHttp = new XMLHttpRequest();
-                xmlHttp.onreadystatechange = function() {
-                    console.log("mudou status: " + this.readyState);
-                    if (this.readyState == 4 && this.status == 200) {
-                        let selecFull = this.responseText;
-                        let selecParse = JSON.parse(this.responseText);
-                        let x = 0;
-                        for (x=0;x<selecFull.length;x++) {
-                            if (selecFull[x].nome == undefined) {
-                                x++;
-                            }else{
-                                console.log("Posicao do Array " + x + " : " + selecFull[x].nomeSelecao);
-                            let linha = selecFull[x];
-                            criarLinhaTabela(linha);
-                            }
-                           
+            xmlHttp.onreadystatechange = function () {
+                console.log("mudou status: " + this.readyState);
+                if (this.readyState == 4 && this.status == 200) {
+                    let objSelecao = this.responseText;
+                    let obj = JSON.parse(this.responseText);
+                    let x = 0;
+                    for (x = 0; x < obj.length; x++) {
+
+                        if (obj[x].nomeSelecao == undefined) {
+                            //   x++;
+                        } else {
+                            let linha = obj[x];
+                            criarLinhaTabela(linha, obj);
                         }
+
+                    }
+                    console.log("Total de entradas: " + x);
+                }
+            }
+            xmlHttp.open("GET", "http://localhost/selecao_CRUD/selecoesListar.php");
+            xmlHttp.send();
+
+            function criarLinhaTabela(pobjReturnJSON, listaFull) {
+                let tb = document.getElementById("tab");
+                let tr = document.createElement("tr"); // cria o elemento tr
+
+
+                let td2 = document.createElement("td"); // cria o element td
+                textnode = document.createTextNode(pobjReturnJSON.nomeSelecao);
+                td2.appendChild(textnode); // adiciona o texto na td criada
+                tr.appendChild(td2); // adiciona a td na tr
+
+                let td5 = document.createElement("td"); // cria o element td
+                textnode = document.createTextNode(pobjReturnJSON.nomeTecnico);
+                td5.appendChild(textnode); // adiciona o texto na td criada
+                tr.appendChild(td5); // adiciona a td na tr
+
+                let td3 = document.createElement("td"); // cria o element td
+                textnode = document.createTextNode(pobjReturnJSON.grupo);
+                td3.appendChild(textnode); // adiciona o texto na td criada
+                tr.appendChild(td3); // adiciona a td na tr
+
+
+                let tdBut1 = document.createElement("td"); // cria o element td
+                let but1 = document.createElement("input", "type"); // cria o element td
+                but1.setAttribute("type", "button");
+                but1.setAttribute("value", "Alterar");
+                but1.setAttribute("onclick", "alterarSelecao()");
+                tdBut1.appendChild(but1);
+                tr.appendChild(tdBut1); // adiciona a td na tr
+
+                let tdBut2 = document.createElement("td"); // cria o element td
+                let but2 = document.createElement("input", "type"); // cria o element td
+                but2.setAttribute("type", "button");
+                but2.setAttribute("value", "Jogar");
+                tdBut2.appendChild(but2);
+                tr.appendChild(tdBut2); // adiciona a td na tr
+
+
+                but1.onclick = function alterarSelecao(params) {
+                    let ver = prompt("Deseja Apagar [1] ou Alterar [2]");
+                    if (ver == 1) {
+                        let nomeSelec = pobjReturnJSON.nomeSelecao;
+
+                        let xmlHttp = new XMLHttpRequest();
+
+                        xmlHttp.open("GET", "http://localhost/selecao_CRUD/selecoesDel.php?nomeSelec=" + nomeSelec);
+                        xmlHttp.send();
+                        console.log("Requisição Enviada - Del");
+                        location.reload();
+
+                    } else if (ver == 2) {
+                        let antSelec = pobjReturnJSON.nomeSelecao;
+                        let altSelec = prompt("Nome da Seleção", pobjReturnJSON.nomeSelecao);
+                        console.log(altSelec);
+                        let altTec = prompt("Nome do Técnico", pobjReturnJSON.nomeTecnico);
+                        console.log(altTec);
+                        let altGrupo = prompt("Grupo", pobjReturnJSON.grupo);
+                        console.log(altGrupo);
+
+
+                        let xmlHttp = new XMLHttpRequest();
+
+                        xmlHttp.open("GET", "http://localhost/selecao_CRUD/selecoesAlt.php?altSelec=" + altSelec + "&altTec=" + altTec + "&altGrupo=" + altGrupo + "&antSelec=" + antSelec);
+                        xmlHttp.send();
+                        console.log("Requisição Enviada - Alt");
+                        location.reload();
+
+                    } else {
+                        alert("Selecione uma opção válida");
                     }
                 }
-                xmlHttp.open("GET", "http://localhost/Daw2022.2/selecao_CRUD/selecoesListar.php");
-                xmlHttp.send();
-        }   
-        function criarLinhaTabela(pobjReturnJSON) {
-            let tb = document.getElementById("tab");
-             let tr = document.createElement("tr");
 
-            let tdSelec = document.createElement("td");
-            textnode = document.createTextNode(pobjReturnJSON.nome);
-            tdSelec.appendChild(textnode);
-            tr.appendChild(tdSelec); 
+                but2.onclick = function jogarSelecoes(params) {
 
-            let tdTec = document.createElement("td");
-            textnode = document.createTextNode(pobjReturnJSON.matricula);
-            tdTec.appendChild(textnode);
-            tr.appendChild(tdTec); 
+                    var confirmador = 0;
+                    let selecaoA;
+                    let selecaoB = prompt("Digite o nome da seleção para confronto:");
+                    if (selecaoB != null || selecaoB != "" || selecaoB != pobjReturnJSON.nomeSelecao) {
 
-            let tdGrupo = document.createElement("td");
-            textnode = document.createTextNode(pobjReturnJSON.email);
-            tdGrupo.appendChild(textnode);
-            tr.appendChild(tdGrupo); 
+                        listaFull.forEach(selecoes => {
+                            if (selecaoB == selecoes.nomeSelecao && selecoes.grupo == pobjReturnJSON.grupo) {
+                                selecaoA = pobjReturnJSON.nomeSelecao;
+                                let data = prompt("Digite a data do jogo [ANO-MES-DIA]");
+                                if (data == null || data == "") {
+                                    data = new Date().toLocaleDateString("sv");
+                                }
 
-            let tdAlt = document.createElement("td");
-            textnode = document.createTextNode(pobjReturnJSON.cpf);
-            tdAlt.appendChild(textnode);
-            tr.appendChild(tdAlt); 
+                                let hora = prompt("Digite a hora do jogo [HH:MM]");
+                                if (hora == null || hora == "") {
+                                    hora = new Date().toLocaleTimeString("sv");
+                                }
 
-        
-            let tdJogar = document.createElement("td");
-            let but1 = document.createElement("input", "type");
-            but1.setAttribute("type", "button");
-            but1.setAttribute("value", "Apagar");
-            tdJogar.appendChild(but1);
-            tr.appendChild(tdJogar); 
-            let but2 = document.createElement("input", "type");
-            but2.setAttribute("type", "button");
-            but2.setAttribute("value", "Alterar");
-            tdJogar.appendChild(but2);
-            tr.appendChild(tdJogar); 
-           
-           
-          but1.onclick = function apagarBtn(params) {
-                  let xmlHttp = new XMLHttpRequest();
-                //   xmlHttp.open("GET", "http://localhost/PHP+JS/CRUD_JAVASCRITP/apagar?matricula=" + pobjReturnJSON.matricula);
-                // xmlHttp.send();
-                console.log("Enviei requisição");
-                alert("Matrícula Apagada");
-                // location.reload();
+                                let local = prompt("Digite o nome do local/estádio");
+                                if (local == null || local == "") {
+                                    local = "Qatar"
+                                }
+
+                                let golsA = prompt("Quantos gols " + pobjReturnJSON.nomeSelecao + " fez: ");
+                                let golsB = prompt("Quantos gols " + selecaoB + " fez: ");
+                                if(golsA == null|| golsA == ""){
+                                    golsA = 0;
+                                }else if(golsB == null || golsB == "" ){
+                                    golsB = 0;
+                                }
+                                
+
+
+                                let xmlHttp = new XMLHttpRequest();
+
+                                xmlHttp.open("GET", "http://localhost/selecao_CRUD/jogos.php?selecaoA=" + selecaoA + "&selecaoB=" + selecaoB + "&data=" + data +
+                                    "&hora=" + hora + "&local=" + local + "&golsA=" + golsA + "&golsB=" + golsB);
+                                xmlHttp.send();
+                                alert("Partida criada com sucesso");
+
+
+                                confirmador = 1;
+                                return;
+
+                            }
+                        });
+                        if (confirmador == 0) {
+                            alert("Time inexistente ou grupo inválido");
+                        }
+                    }
+
+
+                }
+
+                tb.appendChild(tr);
+
+
             }
- 
-
-            tb.appendChild(tr);
-            
-
         }
+
     </script>
 
 </head>
 
-<body onload="carregaSelecoes()">
+<body onload=" carregaSelecoes();">
     <h1>Copa 2022 Qatar</h1>
     <header>
         <a href="selecoes.html">Seleções</a>
@@ -149,14 +230,16 @@
 
             <label for="cadSelec">Nome da seleção: </label>
             <input type="text" name="nomeSelec" id="nomeSelec" placeholder="Digite a nome da seleção"><br>
+
             <label for="cadTec">Nome do técnico: </label>
             <input type="text" name="nomeTec" id="nomeTec" placeholder="Digite o nome do Técnico"><br>
+
             <label for="cadGrupo">Grupo: </label>
             <input type="text" name="grupo" id="grupo" placeholder="Digite o grupo"><br>
 
             <input name="envio" type="button" onclick="cadastrarSelec();" value="Cadastrar">
-           
-            
+
+
 
         </form>
 
@@ -172,19 +255,12 @@
                 <th>Alterar</th>
                 <th>Jogar</th>
             </thead>
-            <tbody>
-                <td>Brasil</td>
-                <td>Tite</td>
-                <td>G</td>
-                <td><input type="button" value="Alterar"></td>
-                <td><input type="button" value="Jogar"></td>
-            </tbody>
-
         </table>
     </div>
     <footer>
         <p id="msg"></p>
     </footer>
+
 </body>
 
 </html>

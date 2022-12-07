@@ -7,14 +7,15 @@ header('Access-Control-Allow-Origin: *'); //falha de segurança
     $mensagem = "";
     if($_SERVER["REQUEST_METHOD"]=="GET")
     {    
-        $nomeSelec = $_GET["nomeSelec"];
-        $nomeTec= $_GET["nomeTec"];
-        $grupo= $_GET["grupo"];
+        $altSelec = $_GET["altSelec"];
+        $altTec= $_GET["altTec"];
+        $altGrupo= $_GET["altGrupo"];
+        $antSelec= $_GET["antSelec"];
 
         $conn = new mysqli ($servidor, $user, $pass, $banco);
-        $sql="INSERT INTO `sistemacopa`(`nomeSelecao`, `nomeTecnico`, `grupo`) VALUES ('$nomeSelec', '$nomeTec', '$grupo')";
+        $sql="UPDATE `sistemacopa` SET `nomeSelecao`='$altSelec',`nomeTecnico`='$altTec',`grupo`='$altGrupo' WHERE `nomeSelecao`='$antSelec'";
         $result=$conn->query($sql);
-        echo $result;
+        // echo $result;
         echo $sql;
         if ($result=true){
             $mensagem="Executando...";

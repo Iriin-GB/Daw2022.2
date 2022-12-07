@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tabela de Jogos</title>
+    <style>
+        table {
+            border-collapse: collapse;
+            border: solid black 1px;
+            width: 90%;
+            margin-left: auto;
+            margin-right: auto;
+            margin-top: 25px;
+        }
+
+        th {
+            border: solid black 1px;
+            border-collapse: collapse;
+        }
+
+        td {
+            border: solid black 1px;
+            border-collapse: collapse;
+        }
+
+        div {
+            border: solid black 1px;
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+            text-align: center;
+            padding: 5px;
+            border-radius: 10px;
+            margin-top: 25px;
+            margin-bottom: 25px;
+            padding-bottom: 5%;
+        }
+
+        .lista {
+            width: 20%;
+        }
+    </style>
+    <script>
+        function carregarJogos() {
+
+            let xmlHttp = new XMLHttpRequest();
+            xmlHttp.onreadystatechange = function () {
+                console.log("mudou status: " + this.readyState);
+                if (this.readyState == 4 && this.status == 200) {
+                    let objSelecao = this.responseText;
+                    let obj = JSON.parse(this.responseText);
+                    let x = 0;
+                    let vetorSelec = [];
+                    for (x = 0; x < obj.length; x++) {
+
+                        if (obj[x].nomeSelecao == undefined) {
+                            //   x++;
+                        } else {
+                            vetorSelec[x] = obj[x];
+                            
+                        }
+
+                    }
+                    calcOitavas(vetorSelec);
+                    console.log("Total de entradas: " + x);
+                    
+                }
+            }
+
+
+            xmlHttp.open("GET", "http://localhost/selecao_CRUD/oitavas.php")
+            xmlHttp.send();
+
+        }
+
+        function criarLinhaTabela(oitvs) {
+
+            let tb = document.getElementById("tab");
+            
+
+            for(let i = 0;i<15;i++){
+                let tr = document.createElement("tr"); // cria o elemento tr
+                let selecaoA = document.createElement("td"); // cria o element td
+                textnode = document.createTextNode(oitvs[i]);
+                selecaoA.appendChild(textnode); // adiciona o texto na td criada
+                tr.appendChild(selecaoA); // adiciona a td na tr
+
+                let vs = document.createElement("td"); // cria o element td
+                textnode = document.createTextNode("Vs.");
+                vs.appendChild(textnode); // adiciona o texto na td criada
+                tr.appendChild(vs); // adiciona a td na tr
+
+
+                let selecaoB = document.createElement("td"); // cria o element td
+                textnode = document.createTextNode(oitvs[i]);
+                selecaoB.appendChild(textnode); // adiciona o texto na td criada
+                tr.appendChild(selecaoB); // adiciona a td na tr
+                tb.appendChild(tr);
+            }
+
+            
+        }
+
+        function calcOitavas(retornoSQL) {
+            
+            let selecaoAtual = retornoSQL[0].nomeSelecao;
+            let grupoAtual = retornoSQL[0].grupo;
+            let pontosAtual = retornoSQL[0].pontos;
+            let selecaoSec;
+            let pontoSec = 0;
+            let oitavas = [16];
+            let j = 0;
+            for (let i = 0; i < retornoSQL.length; i++) {
+                if (grupoAtual == retornoSQL[i].grupo) {
+                    console.log(selecaoAtual, grupoAtual, pontosAtual)
+                    console.log(grupoAtual)
+                    if (pontosAtual < retornoSQL[i].pontos) {
+                        selecaoAtual = retornoSQL[i].nomeSelecao;
+                        pontosAtual = retornoSQL[i].pontos;
+                    } else if (pontosAtual == retornoSQL[i].pontos) {
+                        pontoSec = retornoSQL[i].pontos;
+                        selecaoSec = retornoSQL[i].nomeSelecao;
+                    } else if (pontoSec < retornoSQL[i].pontos) {
+                        pontoSec = retornoSQL[i].pontos;
+                        selecaoSec = retornoSQL[i].nomeSelecao;
+                    }
+
+                } else {
+                    
+                    oitavas[j] = selecaoAtual;
+                    oitavas[j + 1] = selecaoSec;
+
+                    grupoAtual = retornoSQL[i].grupo;
+                    selecaoAtual = retornoSQL[i].nomeSelecao;
+                    
+                }
+
+
+            }
+            
+            criarLinhaTabela(oitavas);
+        }
+
+
+    </script>
+</head>
+
+<body onload="carregarJogos()">
+    <h1>Oitavas de Final</h1>
+    <header>
+        <a href="selecoes.html">Seleções</a>
+        <a href="jogos.html">Jogos</a>
+        <a href="historico.html">Histórico</a>
+        <a href="oitavas.html">Oitavas</a>
+    </header>
+
+    <div class="lista">
+        <table id="tab">
+            <thead>
+                <th>Seleção A</th>
+                <th>VERSUS</th>
+                <th>Seleção B</th>  
+            </thead>
+        </table>
+
+    </div>
+</body>
+
+</html>

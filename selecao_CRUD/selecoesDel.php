@@ -1,5 +1,5 @@
 <?php
-header('Access-Control-Allow-Origin: *'); //falha de segurança
+// header('Access-Control-Allow-Origin: *'); //falha de segurança
     $servidor = "localhost";
     $user = "root";
     $pass = "";
@@ -8,11 +8,9 @@ header('Access-Control-Allow-Origin: *'); //falha de segurança
     if($_SERVER["REQUEST_METHOD"]=="GET")
     {    
         $nomeSelec = $_GET["nomeSelec"];
-        $nomeTec= $_GET["nomeTec"];
-        $grupo= $_GET["grupo"];
 
         $conn = new mysqli ($servidor, $user, $pass, $banco);
-        $sql="INSERT INTO `sistemacopa`(`nomeSelecao`, `nomeTecnico`, `grupo`) VALUES ('$nomeSelec', '$nomeTec', '$grupo')";
+        $sql="DELETE FROM `sistemacopa` WHERE `nomeSelecao` = '$nomeSelec' ";
         $result=$conn->query($sql);
         echo $result;
         echo $sql;

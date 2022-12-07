@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Seleções</title>
+    <style>
+        input {
+            margin-bottom: 5px;
+        }
+
+        table {
+            border: black 1px solid;
+            border-collapse: collapse;
+            width: 100%;
+            text-align: center;
+
+        }
+
+        td {
+            border: black 1px solid;
+            padding: 2px;
+        }
+
+        tr {
+            border: black 1px solid;
+            padding: 2px;
+        }
+
+        th {
+            border: black 1px solid;
+            padding: 2px;
+        }
+
+        #divExib {
+            width: 600px;
+        }
+    </style>
+
+    <script>
+
+        function cadastrarSelec(){
+            let pSelec = document.getElementById("nomeSelec").value;
+            let pTec = document.getElementById("nomeTec").value;
+            let pGrupo = document.getElementById("grupo").value;
+            
+            let xmlHttp = new XMLHttpRequest();
+        
+            xmlHttp.open("GET", "http://localhost/selecao_CRUD/selecoesIncluir?nomeSelec=" + pSelec + "&nomeTec=" + pTec + "&grupo=" + pGrupo);
+            xmlHttp.send();
+            console.log("Requisição Enviada");
+            location.reload();
+        }
+
+        function carregaSelecoes() {
+            let xmlHttp = new XMLHttpRequest();
+                xmlHttp.onreadystatechange = function() {
+                    console.log("mudou status: " + this.readyState);
+                    if (this.readyState == 4 && this.status == 200) {
+                        let objSelecao = this.responseText;
+                        let obj = JSON.parse(this.responseText);
+                        let x = 0;
+                        for (x=0;x<obj.length;x++) {
+                            if (obj[x].pSelec == undefined) {
+                                x++;
+                            }else{
+                                console.log("Posicao do Array " + x + " : " + obj[x].pSelec);
+                            let linha = obj[x];
+                            criarLinhaTabela(linha);
+                            }
+                            
+                        }
+                        console.log("Posicao do x " + x );
+                    }
+                }
+                xmlHttp.open("GET", "http://localhost/selecao_CRUD/selecoesListar.php");
+                xmlHttp.send();
+        }   
+
+    </script>
+
+</head>
+
+<body onload="carregaSelecoes();">
+    <h1>Copa 2022 Qatar</h1>
+    <header>
+        <a href="/selecao_CRUD/selecoes.html">Seleções</a>
+        <a href="selecao_CRUD/jogos.html">Jogos</a>
+        <a href="selecao_CRUD/historico.html">Histórico</a>
+        <a href="selecao_CRUD/oitavas.html">Oitavas</a>
+    </header>
+    <div style="border: black 1px solid; width:550px; border-radius:10px; float:right; padding:10px;">
+        <h2 style="text-align: center;">Cadastre uma nova seleção</h2>
+
+        <form id="cadastro">
+
+            <label for="cadSelec">Nome da seleção: </label>
+            <input type="text" name="nomeSelec" id="nomeSelec" placeholder="Digite a nome da seleção"><br>
+
+            <label for="cadTec">Nome do técnico: </label>
+            <input type="text" name="nomeTec" id="nomeTec" placeholder="Digite o nome do Técnico"><br>
+
+            <label for="cadGrupo">Grupo: </label>
+            <input type="text" name="grupo" id="grupo" placeholder="Digite o grupo"><br>
+
+            <input name="envio" type="button" onclick="cadastrarSelec();" value="Cadastrar">
+           
+            
+
+        </form>
+
+    </div>
+
+    <div id="divExib">
+        <h2>Seleções cadastradas</h2>
+        <table>
+            <thead>
+                <th>Seleção</th>
+                <th>Técnico</th>
+                <th>Grupo</th>
+                <th>Alterar</th>
+                <th>Jogar</th>
+            </thead>
+            <tbody>
+                <td>Brasil</td>
+                <td>Tite</td>
+                <td>G</td>
+                <td><input type="button" value="Alterar"></td>
+                <td><input type="button" value="Jogar"></td>
+            </tbody>
+
+        </table>
+    </div>
+    <footer>
+        <p id="msg"></p>
+    </footer>
+</body>
+
+</html>
