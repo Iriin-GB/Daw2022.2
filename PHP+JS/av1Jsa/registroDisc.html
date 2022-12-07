@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registrar Disciplina</title>
+    <style>
+        .quadrado {
+            border: solid rgba(0, 0, 0, 0.516) 1px;
+            background-color: rgb(202, 202, 202);
+            width: 500px;
+            height: 500px;
+            display: block;
+            margin-top: 30px;
+            margin-left: auto;
+            margin-right: auto;
+            padding: 30px;
+            text-align: center;
+            border-radius: 50%;
+        }
+        input{
+            width: 50%;
+        }
+        table{
+            border: solid black 1px;
+            border-collapse: collapse;
+            margin-left: auto;
+            margin-right: auto;
+            margin-top: 30px;
+        }
+        td{
+            border: solid black 1px;
+            border-collapse: collapse; 
+        }
+    </style>
+    <script>
+        function cadMat(){
+            matNome = document.getElementById("matNome").value;
+            creditos = document.getElementById("creditos").value;
+            periodo = document.getElementById("periodo").value;
+            idReq = document.getElementById("idReq").value;
+            console.log(idReq, typeof idReq)
+            if(idReq == "" || idReq == null){
+                idReq = 0;
+            }
+            
+            let xmlHttp = new XMLHttpRequest();
+
+                xmlHttp.onreadystatechange = function () {
+                    if (this.readyState == 4 && this.status == 200) {
+                        let resp = xmlHttp.responseText;
+                        alert(resp);
+                        // document.location.reload();
+                    }
+
+
+                }
+                xmlHttp.open("GET", "http://localhost/Daw2022.2/av1Js/cadMat.php?matNome=" + matNome + "&creditos=" + creditos + "&periodo=" + periodo + "&idReq=" + idReq);
+                xmlHttp.send();
+                }
+        
+        function criarLinhaTabela(){
+                let tb = document.getElementById("tab");
+                let tr = document.createElement("tr"); // cria o elemento tr
+             
+                
+                let td1 = document.createElement("td"); // cria o element td
+                textnode = document.createTextNode(retornoInfos.nomeCarro);
+                td1.appendChild(textnode); // adiciona o texto na td criada
+                tr.appendChild(td1); // adiciona a td na tr
+
+                let td2 = document.createElement("td"); // cria o element td
+                textnode = document.createTextNode(retornoInfos.categoria);
+                td2.appendChild(textnode); // adiciona o texto na td criada
+                tr.appendChild(td2); // adiciona a td na tr
+
+                let td3 = document.createElement("td"); // cria o element td
+                textnode = document.createTextNode(retornoInfos.cidade);
+                td3.appendChild(textnode); // adiciona o texto na td criada
+                tr.appendChild(td3); // adiciona a td na tr
+
+                let td4 = document.createElement("td"); // cria o element td
+                textnode = document.createTextNode(retornoInfos.preco);
+                td4.appendChild(textnode); // adiciona o texto na td criada
+                tr.appendChild(td4); // adiciona a td na tr
+
+                let td5 = document.createElement("td"); // cria o element td
+                textnode = document.createTextNode(retornoInfos.preco * tempoCerto);
+                td5.appendChild(textnode); // adiciona o texto na td criada
+                tr.appendChild(td5); // adiciona a td na tr
+
+                let td6 = document.createElement("td"); // cria o element td
+                but1 = document.createElement("input");
+                but1.setAttribute("id", "butComprar");
+                but1.setAttribute("type", "button");
+                but1.setAttribute("value", "Comprar");
+
+                but1.onclick = function alugarCarro(params){
+                    let pesquisaID = new URLSearchParams(location.search);
+                    idClient = pesquisaID.get('id');
+                    if(idClient == undefined || idClient == null){
+                        alert("Você precisa estar logado para alugar");
+                    }else{
+                        let radioMark = document.querySelector('input[name="tempo"]:checked').value;
+                        window.location.replace("http://localhost/rent-a-car/carro.html?idCarro=" + retornoInfos.id + "&idClient=" + idClient + "&dias=" + radioMark );
+                    }
+                    
+                    console.log(retornoInfos);
+                }
+                td6.appendChild(but1); // adiciona o texto na td criada
+                tr.appendChild(td6); // adiciona a td na tr
+                
+                tb.appendChild(tr);
+    }
+
+    </script>
+</head>
+
+<body>
+    <div>
+        <span class="quadrado">
+            <form>
+                <label for="matNome"></label><br>
+                    <input style="margin-top: 50px;" style="width: 50%" type="text" id="matNome"
+                        placeholder="Digite a materia a se cadastrada"><br>
+                
+                <label for="Sigla"></label>
+                    <input style="margin-top: 25px;" style="width: 50%" type="text" id="creditos"
+                        placeholder="Quantos créditos gera"><br>
+                
+                        <label for="Sigla"></label>
+                    <input style="margin-top: 25px;" style="width: 50%" type="text" id="periodo"
+                        placeholder="Digite o período"><br>
+
+                <label for="IdReq"></label>
+                <input style="margin-top: 25px" type="text" placeholder="ID da Matéria necessária" id="idReq">
+                <br>
+                <br>
+
+
+                <input type="button" value="Registrar" id="butReg" onclick="cadMat()">
+
+            </form>
+        </span>
+    </div>
+    <div>
+        <table id="tab">
+            <tr>
+                <td>ID</td>
+                <td>Nome</td>
+                <td>Período</td>
+                <td>Requisito</td>
+                <td>Créditos</td>
+            </tr>
+        </table>
+    </div>
+</body>
+
+</html>
